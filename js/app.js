@@ -48,8 +48,11 @@ function renderCountries(countries) {
 
 function getData(searchInput) {
   //case ALL
-  if (searchInput === '') {
-    fetch('https://restcountries.com/v2/all').then(res => res.json()).then(data => {
+  let url = 'https://restcountries.com/v2/all';
+  if(searchInput){
+    url =`https://restcountries.com/v2/name/${searchInput}`;
+  }
+  fetch(url).then(res => res.json()).then(data => {
       const filteredData = data.map(el => {
         return {
           name: el.name,
@@ -63,26 +66,7 @@ function getData(searchInput) {
     })
   }
 
-  // case NAME
-  else {
-    fetch(`https://restcountries.com/v2/name/${searchInput}`)
-      .then(res => res.json())
-      .then(data => {
-        const filteredData = data.map(el => {
-          return {
-            name: el.name,
-            region: el.region,
-            population: el.population,
-            area: el.area
-          }
-        })
-        store.setCountries(filteredData);
-        renderCountries(filteredData)
-      });
-  }
-}
-
-getData('');
+ getData();
 
 searchButton = document.getElementById('search-button');
 searchButton.onclick = e => {
